@@ -1,16 +1,16 @@
 package LLD.ObserverDesignPattern;
 
-public class DisplayObserver implements Observer{
+public class RadioObserver implements Observer{
 
     @Override
     public void update(Observable observable) {
         if(observable instanceof WSObservable){
             System.out.println("Temprature Updated by Weather Station");
-            System.out.println("Display - New Temprature : "+((WSObservable) observable).temp);
+            System.out.println("Radio - New Temprature : "+((WSObservable) observable).temp);
         }
         else if(observable instanceof GAObservable){
             System.out.println("Advisory Issued by Government");
-            System.out.println("Display - New Advisory : "+((GAObservable) observable).advisory);
+            System.out.println("Radio - New Advisory : "+((GAObservable) observable).advisory);
         }
     }
 }
