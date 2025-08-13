@@ -6,6 +6,7 @@ public class Main {
         GAObservable gaObservable = new GAObservable();
         DisplayObserver displayObserver = new DisplayObserver();
         RadioObserver radioObserver = new RadioObserver();
+        
         wsObservable.add(displayObserver);
         wsObservable.add(radioObserver);
         gaObservable.add(displayObserver);
