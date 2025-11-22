@@ -20,3 +20,14 @@ which violates closed for modification principle.
 #### OpenClosedPrinciple
 here in this if we want to provide support of calculate area to other shape , we only need to implement Shape interface,
 we don't need to make any change in AreaCalculator
+
+<hr>
+
+### Interface Segregation Principle
+
+#### WithoutInterfaceSegregationPrinciple
+here in this robot client is forced to implement eat behavior, although robot do no support eat behavior
+
+#### InterfaceSegregationPrinciple
+here in this we have broken "Worker" interface into smaller "Eatable and Workable" interface,
+now robot is not forced to implement eat behaviour.
