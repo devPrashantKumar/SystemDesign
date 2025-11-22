@@ -31,3 +31,14 @@ here in this robot client is forced to implement eat behavior, although robot do
 #### InterfaceSegregationPrinciple
 here in this we have broken "Worker" interface into smaller "Eatable and Workable" interface,
 now robot is not forced to implement eat behaviour.
+
+<hr>
+
+### Dependency Inversion Principle
+
+#### WithoutDependencyInversionPrinciple
+here in this High level datastore in dependent on low level module MySDLDatabase, 
+in future if we want to use different database, we need to make changes in datastore.    
+
+#### DependencyInversionPrinciple
+here in this High level module **DataStore** and low level module **MySQLDatabase** both are depends on abstraction **Database**
