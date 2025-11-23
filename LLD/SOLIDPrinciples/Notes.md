@@ -42,3 +42,13 @@ in future if we want to use different database, we need to make changes in datas
 
 #### DependencyInversionPrinciple
 here in this High level module **DataStore** and low level module **MySQLDatabase** both are depends on abstraction **Database**
+
+<hr>
+
+### Liskov Substitution Principle
+
+#### WithoutLiskovSubstitutionPrinciple
+https://dev.to/extinctsion/solid-the-liskov-substitution-principle-lsp-in-c-1hl9#:~:text=Ease%20of%20Testing%3A%20Code%20that,and%20flexible%20object%2Doriented%20designs.
+
+#### LiskovSubstitutionPrinciple
+https://dev.to/extinctsion/solid-the-liskov-substitution-principle-lsp-in-c-1hl9#:~:text=Ease%20of%20Testing%3A%20Code%20that,and%20flexible%20object%2Doriented%20designs.
