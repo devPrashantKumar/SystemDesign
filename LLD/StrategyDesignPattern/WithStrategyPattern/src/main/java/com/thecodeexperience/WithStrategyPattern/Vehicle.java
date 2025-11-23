@@ -1,6 +1,6 @@
-package LLD.StrategyDesignPattern.WithStrategyPattern;
+package com.thecodeexperience.WithStrategyPattern;
 
-import LLD.StrategyDesignPattern.WithStrategyPattern.Strategy.DriveStrategy;
+import com.thecodeexperience.WithStrategyPattern.Strategy.DriveStrategy;
 
 public class Vehicle {
     DriveStrategy driveStrategy;

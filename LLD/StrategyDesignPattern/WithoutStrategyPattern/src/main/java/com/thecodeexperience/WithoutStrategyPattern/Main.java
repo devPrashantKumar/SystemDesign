@@ -1,4 +1,4 @@
-package LLD.StrategyDesignPattern.WithoutStrategyPattern;
+package com.thecodeexperience.WithoutStrategyPattern;
 
 public class Main {
     public static void main(String[] args) {
