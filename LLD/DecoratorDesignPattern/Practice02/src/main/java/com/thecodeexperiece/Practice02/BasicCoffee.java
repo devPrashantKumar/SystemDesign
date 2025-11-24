@@ -1,0 +1,13 @@
+package com.thecodeexperiece.Practice02;
+
+public class BasicCoffee implements Coffee {
+    @Override
+    public int cost() {
+        return 10;
+    }
+
+    @Override
+    public String description() {
+        return "Basic Coffee";
+    }
+}
