@@ -1,4 +1,4 @@
-package LLD.ObserverDesignPattern;
+package com.thecodeexperience.Practice;
 
 public interface Observable {
     public void add(Observer observer);

@@ -1,4 +1,4 @@
-package LLD.ObserverDesignPattern;
+package com.thecodeexperience.Practice;
 
 public class DisplayObserver implements Observer{
 

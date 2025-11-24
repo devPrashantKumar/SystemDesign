@@ -1,10 +1,10 @@
-package LLD.ObserverDesignPattern;
+package com.thecodeexperience.Practice;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WSObservable implements Observable {
-    int temp=0;
+public class GAObservable implements Observable{
+    String advisory="";
     List<Observer> observers = new ArrayList<>();
 
     @Override
@@ -24,9 +24,8 @@ public class WSObservable implements Observable {
         }
     }
 
-    public void setTemprature(int temp){
-        this.temp = temp;
+    public void setAdvisory(String advisory){
+        this.advisory = advisory;
         notifyObserver();
     }
-    
 }
