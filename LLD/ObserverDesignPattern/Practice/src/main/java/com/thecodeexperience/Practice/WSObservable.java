@@ -21,6 +21,7 @@ public class WSObservable implements Observable {
     public void notifyObserver() {
         for(Observer observer:observers){
             observer.update(this);
+            //observer.update(this,this.getClass());
         }
     }
 

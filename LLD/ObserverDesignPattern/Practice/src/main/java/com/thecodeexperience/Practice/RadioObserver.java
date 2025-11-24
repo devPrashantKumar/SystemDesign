@@ -13,4 +13,16 @@ public class RadioObserver implements Observer{
             System.out.println("Radio - New Advisory : "+((GAObservable) observable).advisory);
         }
     }
+
+//    @Override
+//    public void update(Observable observable, Class<?> sourceClass) {
+//        if(sourceClass.equals(WSObservable.class)){
+//            System.out.println("Temperature Updated by Weather Station");
+//            System.out.println("Radio - New Temperature : "+((WSObservable) observable).temp);
+//        }
+//        else if(sourceClass.equals(GAObservable.class)){
+//            System.out.println("Advisory Issued by Government");
+//            System.out.println("Radio - New Advisory : "+((GAObservable) observable).advisory);
+//        }
+//    }
 }
