@@ -119,4 +119,3 @@ sequenceDiagram
 3. **Adding a new provider extends the diagram sideways, not upward.**
    A `CSVReportProvider` + `CSVReportProviderAdapter` would appear as a second
    implements-arrow into `IReport` — `Client` and `IReport` boxes stay untouched.
-```
