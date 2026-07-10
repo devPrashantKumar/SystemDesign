@@ -5,33 +5,26 @@ package com.thecodeexperience.WithBuilderDesignPattern;
 // create builders itself. This keeps the Director decoupled from any specific
 // builder implementation (standard GoF approach).
 public class StudentDirector {
-
-    private final StudentWay3.StudentBuilder builder;
-
-    // Client creates the builder and passes it in — Director only configures it.
-    public StudentDirector(StudentWay3.StudentBuilder builder) {
-        this.builder = builder;
+    // All methods are static — prevent instantiation.
+    private StudentDirector() {
     }
 
     // Configures the builder for a science student and returns the product.
-    public StudentWay3 buildScienceStudent(String address, int age) {
+    public static StudentWay3 buildScienceStudent(StudentWay3.StudentBuilder builder) {
         return builder
-                .address(address)
-                .age(age)
                 .fatherName("Science-Department-Guardian")
                 .build();
     }
 
     // Configures the builder for a hostel student and returns the product.
-    public StudentWay3 buildHostelStudent(int age) {
+    public static StudentWay3 buildHostelStudent(StudentWay3.StudentBuilder builder) {
         return builder
                 .address("University Hostel, Block-A")
-                .age(age)
                 .build();
     }
 
     // Returns a minimal student with only the required fields.
-    public StudentWay3 buildMinimalStudent() {
+    public static StudentWay3 buildMinimalStudent(StudentWay3.StudentBuilder builder) {
         return builder.build();
     }
 }
