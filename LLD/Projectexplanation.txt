@@ -1,0 +1,142 @@
+
+❯ understand and explain this project                                           
+
+● Let me explore the project structure to give you a thorough explanation.
+
+  Searched for 2 patterns (ctrl+o to expand)
+
+● Now let me read key source files from each module to understand the
+  implementations.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Now let me read representative files from each module to understand the
+  implementations.
+
+  Read 5 files (ctrl+o to expand)
+
+● Now I have a thorough understanding of the entire project. Let me save a
+  memory about this project and then explain it.
+
+  Recalled 1 memory, wrote 2 memories (ctrl+o to expand)
+
+● Here's a complete overview of the project:
+
+  ---
+  Project Overview
+
+  This is a Java/Maven LLD (Low-Level Design) learning repository organized as a
+  collection of independent Maven projects, each demonstrating a specific
+  design concept. The common theme: most topics include a Without<X> version
+  (the problem) paired with a With<X> version (the solution).
+
+  ---
+  Module Breakdown
+
+  1. SOLID Principles (SOLIDPrinciples/)
+
+  Five principles, each shown before and after applying the principle:
+
+  ┌───────────────────┬────────────────────────┬────────────────────────────┐
+  │     Principle     │        Without         │            With            │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Single            │ Invoice handles        │ Split into Invoice,        │
+  │ Responsibility    │ calculation + printing │ PrintInvoice,              │
+  │ (SRP)             │  + DB save             │ InvoiceRepository          │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │                   │ AreaCalculator uses    │ Shape interface; each      │
+  │ Open/Closed (OCP) │ if/else for each shape │ shape calculates its own   │
+  │                   │                        │ area                       │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Liskov            │ Square extends         │ Square and Rectangle both  │
+  │ Substitution      │ Rectangle breaks area  │ extend abstract Shape      │
+  │ (LSP)             │ logic                  │                            │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Interface         │ Worker interface       │ Split into Workable and    │
+  │ Segregation (ISP) │ forces Robot to        │ Eatable interfaces         │
+  │                   │ implement eat()        │                            │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Dependency        │ DataStore directly     │ DataStore depends on       │
+  │ Inversion (DIP)   │ creates MySQLDatabase  │ Database interface, not    │
+  │                   │                        │ concrete class             │
+  └───────────────────┴────────────────────────┴────────────────────────────┘
+
+  ---
+  2. Strategy Pattern (StrategyDesignPattern/)
+
+  Problem: Vehicle subclasses (SportsVehicle, GoodsVehicle, etc.) each override
+  drive() — code duplication when multiple vehicles share the same drive
+  behavior.
+
+  Solution: Extract a DriveStrategy interface (NormalDriveStrategy,
+  SportsDriveStrategy). Vehicle takes a strategy via constructor — behavior is
+  injected rather than inherited.
+
+  ---
+  3. Decorator Pattern (DecoratorDesignPattern/)
+
+  Example: Coffee ordering system. BasicCoffee implements Coffee interface.
+  CoffeeDecorator wraps any Coffee and delegates to it. MilkDecorator and
+  SugarDecorator extend the decorator, adding their own cost/description on top.
+  Usage in Main:
+  coffee = new SugarDecorator(new MilkDecorator(new BasicCoffee()));
+  Stacks behaviors at runtime without subclassing explosions.
+
+  ---
+  4. Observer Pattern (ObserverDesignPattern/)
+
+  Example: Government advisory broadcast system. GAObservable and WSObservable
+  implement Observable (with add, remove, notifyObserver). DisplayObserver and
+  RadioObserver implement Observer (with update). When an advisory is set on the
+  observable, all registered observers are notified automatically.
+
+  ---
+  5. Proxy Pattern (ProxyDesignPattern/)
+
+  Example: Role-based access control for employee data. EmployeeDaoImpl is the
+  real object. EmployeeDaoProxy wraps it and checks the caller's role before
+  delegating:
+  - create → only USER
+  - get → USER or ADMIN
+  - delete → only ADMIN
+
+  ---
+  6. Factory & Abstract Factory (FactoryAndAbstractFactoryDesignPattern/)
+
+  - Factory: ShapeFactory.getShape("CIRCLE") returns a Circle or Rectangle —
+  caller doesn't know the concrete type.
+  - Abstract Factory: IUIFactory produces families of related objects (Button +
+  Checkbox). MacFactory returns Mac-styled widgets; WindowsFactory returns
+  Windows-styled ones. Client code works against the factory interface, not
+  concrete classes.
+
+  ---
+  7. Command Pattern (CommandDesignPattern/)
+
+  Example: A smart remote control. ICommand interface has execute() and undo().
+  Concrete commands (TurnBulbOnCommand, TurnACOffCommand, etc.) hold a reference
+  to their receiver (Bulb, AirConditioner). MyRemoteControl stores commands in
+  a HashMap and keeps a Stack for undo history — calling undo() pops the last
+  command and reverses it.
+
+  ---
+  8. TicTacToe LLD (TicTacToeDesign/)
+
+  A full interactive game design:
+  - Board — 3x3 grid of Piece objects; handles addPiece(), getFreeCells(), and
+  isThereWinner() (checks row, column, diagonal, anti-diagonal)
+  - Piece → PieceX / PieceO with a PieceType enum
+  - Player — holds name + their piece
+  - TicTacToeGame — uses a Deque<Player> to rotate turns; reads input from
+  stdin; returns winner name or "Tie"
+
+  ---
+  Tech Stack
+
+  - Language: Java
+  - Build: Maven (each module is a standalone Maven project)
+  - IDE: IntelliJ IDEA (.idea/ config files present)
+
+  The repo is essentially a structured study guide for LLD interview
+  preparation, progressing from SOLID principles through behavioral, structural,
+  and creational design patterns, ending with a real LLD problem (TicTacToe).

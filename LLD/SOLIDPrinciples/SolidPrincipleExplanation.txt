@@ -1,0 +1,269 @@
+
+❯ understand and explain this project                                           
+
+● Let me explore the project structure to give you a thorough explanation.
+
+  Searched for 2 patterns (ctrl+o to expand)
+
+● Now let me read key source files from each module to understand the
+  implementations.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Now let me read representative files from each module to understand the
+  implementations.
+
+  Read 5 files (ctrl+o to expand)
+
+● Now I have a thorough understanding of the entire project. Let me save a
+  memory about this project and then explain it.
+
+  Recalled 1 memory, wrote 2 memories (ctrl+o to expand)
+
+● Here's a complete overview of the project:
+
+  ---
+  Project Overview
+
+  This is a Java/Maven LLD (Low-Level Design) learning repository organized as a
+  collection of independent Maven projects, each demonstrating a specific
+  design concept. The common theme: most topics include a Without<X> version
+  (the problem) paired with a With<X> version (the solution).
+
+  ---
+  Module Breakdown
+
+  1. SOLID Principles (SOLIDPrinciples/)
+
+  Five principles, each shown before and after applying the principle:
+
+  ┌───────────────────┬────────────────────────┬────────────────────────────┐
+  │     Principle     │        Without         │            With            │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Single            │ Invoice handles        │ Split into Invoice,        │
+  │ Responsibility    │ calculation + printing │ PrintInvoice,              │
+  │ (SRP)             │  + DB save             │ InvoiceRepository          │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │                   │ AreaCalculator uses    │ Shape interface; each      │
+  │ Open/Closed (OCP) │ if/else for each shape │ shape calculates its own   │
+  │                   │                        │ area                       │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Liskov            │ Square extends         │ Square and Rectangle both  │
+  │ Substitution      │ Rectangle breaks area  │ extend abstract Shape      │
+  │ (LSP)             │ logic                  │                            │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Interface         │ Worker interface       │ Split into Workable and    │
+  │ Segregation (ISP) │ forces Robot to        │ Eatable interfaces         │
+  │                   │ implement eat()        │                            │
+  ├───────────────────┼────────────────────────┼────────────────────────────┤
+  │ Dependency        │ DataStore directly     │ DataStore depends on       │
+  │ Inversion (DIP)   │ creates MySQLDatabase  │ Database interface, not    │
+  │                   │                        │ concrete class             │
+  └───────────────────┴────────────────────────┴────────────────────────────┘
+
+  ---
+
+❯ explain SOLID PRINCIPLE                                                       
+
+● Let me read the key files to ground the explanation in your actual code.
+
+  Read 5 files (ctrl+o to expand)
+
+● Here is a complete explanation of all 5 SOLID principles as implemented in
+  your codebase.
+
+  ---
+  SOLID Principles
+
+  SOLID is an acronym for 5 design principles that make object-oriented code
+  easier to maintain, extend, and understand.
+
+  ---
+  S — Single Responsibility Principle (SRP)
+
+  ▎ A class should have only one reason to change.
+
+  The Problem (WithoutSingleResponsibility/Invoice.java)
+
+  public class Invoice {
+      public int calculateInvoics()  { return quantity * price; }
+      public void printInvoice()     { /* printing logic */ }
+      public void saveToDBInvoice()  { /* DB logic */ }
+  }
+  This class does 3 things. If the PDF format changes, you modify Invoice. If
+  the DB schema changes, you modify Invoice again. Three reasons to change =
+  fragile class.
+
+  The Fix (SingleResponsibility/)
+
+  Invoice            → only calculates total
+  PrintInvoice       → only handles printing
+  InvoiceRepository  → only handles DB persistence
+  Now each class has exactly one job. Changing how you print doesn't risk
+  breaking the DB logic.
+
+  ---
+  O — Open/Closed Principle (OCP)
+
+  ▎ A class should be open for extension but closed for modification.
+
+  The Problem (WithoutOpenClosedPrinciple/AreaCalculator.java)
+
+  public double calculateArea(Object shape) {
+      if (shape instanceof Circle c)         return Math.PI * c.radius *
+  c.radius;
+      else if (shape instanceof Rectangle r) return r.width * r.height;
+      return 0;
+  }
+  Every time you add a new shape (Triangle, Hexagon...), you have to modify
+  AreaCalculator. This is risky — you could break existing shape logic.
+
+  The Fix (OpenClosedPrinciple/)
+
+  // Shape interface — defines the contract
+  public interface Shape { double area(); }
+
+  // Each shape knows its own area
+  public class Circle implements Shape {
+      public double area() { return Math.PI * radius * radius; }
+  }
+
+  // AreaCalculator never changes, no matter how many shapes you add
+  public class AreaCalculator {
+      public double calculateArea(Shape shape) { return shape.area(); }
+  }
+  To add a Triangle, you just create a new class — AreaCalculator is never
+  touched.
+
+  ---
+  L — Liskov Substitution Principle (LSP)
+
+  ▎ Subclasses must be substitutable for their parent class without breaking 
+  ▎ behaviour.
+
+  The Problem (WithoutLiskovSubstitutionPrinciple/)
+
+  public class Rectangle {
+      public void setWidth(int w)  { this.width = w; }
+      public void setHeight(int h) { this.height = h; }
+      public int area()            { return width * height; }
+  }
+
+  public class Square extends Rectangle {
+      @Override
+      public void setWidth(int w)  { this.width = this.height = w; } // both 
+  forced equal
+      @Override
+      public void setHeight(int h) { this.width = this.height = h; }
+  }
+  If code does:
+  Rectangle r = new Square();
+  r.setWidth(5);
+  r.setHeight(10);
+  // Expected area: 50, Actual area: 100 — BROKEN
+  Square silently violates Rectangle's contract. Substituting a Square where a
+  Rectangle is expected breaks behavior.
+
+  The Fix (LiskovSubstitutionPrinciple/)
+
+  public interface Shape { int area(); }
+
+  // Rectangle and Square are independent siblings, not parent-child
+  public class Rectangle implements Shape { /* setWidth, setHeight */ }
+  public class Square    implements Shape { /* setSide only */ }
+  Now both can be used where a Shape is expected, and neither surprises you.
+
+  ---
+  I — Interface Segregation Principle (ISP)
+
+  ▎ A class should not be forced to implement methods it doesn't need.
+
+  The Problem (WithoutInterfaceSegregationPrinciple/)
+
+  public interface Worker {
+      void work();
+      void eat(); // robots don't eat!
+  }
+
+  public class Robot implements Worker {
+      public void work() { System.out.println("Robot is working"); }
+      public void eat()  { System.out.println("Robot doesn't eat, unsupported 
+  behavior"); }
+  }
+  Robot is forced to implement eat() — a method that makes no sense for it. This
+  is a sign the interface is too fat.
+
+  The Fix (InterfaceSegregationPrinciple/)
+
+  public interface Workable { void work(); }
+  public interface Eatable  { void eat();  }
+
+  public class Robot implements Workable          { /* only work() */ }
+  public class Human implements Workable, Eatable { /* both */ }
+  Interfaces are split by what actually belongs together. Each class implements
+  only what it truly supports.
+
+  ---
+  D — Dependency Inversion Principle (DIP)
+
+  ▎ High-level modules should not depend on low-level modules. Both should 
+  ▎ depend on abstractions.
+
+  The Problem (WithoutDependecyInversionPrinciple/)
+
+  public class DataStore {
+      private MySQLDatabase db = new MySQLDatabase(); // hardcoded concrete 
+  class
+      public void save(String data) { db.save(data); }
+  }
+  DataStore (high-level) directly creates and depends on MySQLDatabase
+  (low-level). If you want to switch to PostgreSQL or MongoDB, you must change
+  DataStore.
+
+  The Fix (DependecyInversionPrinciple/)
+
+  public interface Database { void save(String data); } // abstraction
+
+  public class DataStore {
+      private Database database; // depends on interface, not MySQL
+      public DataStore(Database database) { this.database = database; }
+      public void save(String data) { database.save(data); }
+  }
+
+  public class MySQLDatabase implements Database { ... }
+  // Tomorrow: public class MongoDatabase implements Database { ... }
+  DataStore now depends on the Database interface. You can inject any
+  implementation — MySQL, Mongo, in-memory for tests — without touching
+  DataStore at all.
+
+  ---
+  Summary Table
+
+  ┌────────┬─────────────────┬───────────────────┬─────────────────────────┐
+  │ Letter │    Principle    │     Core Idea     │      Your Example       │
+  ├────────┼─────────────────┼───────────────────┼─────────────────────────┤
+  │        │ Single          │ One class, one    │ Invoice → Invoice +     │
+  │ S      │ Responsibility  │ job               │ PrintInvoice +          │
+  │        │                 │                   │ InvoiceRepository       │
+  ├────────┼─────────────────┼───────────────────┼─────────────────────────┤
+  │ O      │ Open/Closed     │ Extend without    │ AreaCalculator works    │
+  │        │                 │ modifying         │ for any future Shape    │
+  ├────────┼─────────────────┼───────────────────┼─────────────────────────┤
+  │        │ Liskov          │ Subclass must     │ Square can't inherit    │
+  │ L      │ Substitution    │ honor parent's    │ Rectangle               │
+  │        │                 │ contract          │                         │
+  ├────────┼─────────────────┼───────────────────┼─────────────────────────┤
+  │ I      │ Interface       │ Don't force       │ Worker → Workable +     │
+  │        │ Segregation     │ unused methods    │ Eatable                 │
+  ├────────┼─────────────────┼───────────────────┼─────────────────────────┤
+  │        │ Dependency      │ Depend on         │ DataStore takes         │
+  │ D      │ Inversion       │ abstractions, not │ Database, not           │
+  │        │                 │  concretions      │ MySQLDatabase           │
+  └────────┴─────────────────┴───────────────────┴─────────────────────────┘
+
+  These principles work together — fixing one often naturally pulls you toward
+  fixing another.
+
+✻ Baked for 42s
+
+※ recap: Learning LLD design patterns in Java. Just finished explaining SOLID principles with before/after code examples from the project. Ready to explain the next topic whenever you are. (disable recaps in /config)
