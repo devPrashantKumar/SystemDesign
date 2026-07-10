@@ -1,0 +1,169 @@
+● Command Design Pattern
+
+  ▎ Encapsulate a request as an object, so you can parameterize, queue, log, and
+  ▎ undo operations.
+
+  The key insight: instead of calling bulb.turnOn() directly, you wrap that call
+  in a Command object. The invoker (remote control) only knows about the
+  command interface — never about Bulb or AirConditioner.
+
+  ---
+  The 4 Roles
+
+  ┌──────────────┬───────────────────────────────┬─────────────────────────┐
+  │     Role     │      Class in your code       │     Responsibility      │
+  ├──────────────┼───────────────────────────────┼─────────────────────────┤
+  │ Command      │ ICommand                      │ Declares execute() +    │
+  │ interface    │                               │ undo()                  │
+  ├──────────────┼───────────────────────────────┼─────────────────────────┤
+  │ Concrete     │ TurnBulbOnCommand,            │ Wraps a receiver + one  │
+  │ Commands     │ TurnACOffCommand, etc.        │ action                  │
+  ├──────────────┼───────────────────────────────┼─────────────────────────┤
+  │ Receiver     │ Bulb, AirConditioner          │ Knows how to actually   │
+  │              │                               │ do the work             │
+  ├──────────────┼───────────────────────────────┼─────────────────────────┤
+  │ Invoker      │ MyRemoteControl               │ Triggers commands,      │
+  │              │                               │ manages history         │
+  └──────────────┴───────────────────────────────┴─────────────────────────┘
+
+  ---
+  Step 1 — The Command Interface (ICommand.java)
+
+  public interface ICommand {
+      void execute();
+      void undo();
+  }
+
+  Every command must support two operations: do and un-do. The invoker only ever
+  calls these two methods.
+
+  ---
+  Step 2 — The Receivers (Bulb.java, AirConditioner.java)
+
+  public class Bulb {
+      public void turnOn()  { System.out.println("Bulb Turned ON");  }
+      public void turnOff() { System.out.println("Bulb Turned OFF"); }
+  }
+
+  Plain classes with no knowledge of commands or remotes. They just know how to
+  do their job.
+
+  ---
+  Step 3 — Concrete Commands
+
+  Each command holds a reference to its receiver and translates execute()/undo()
+  into the right receiver call:
+
+  public class TurnBulbOnCommand implements ICommand {
+      Bulb bulb;
+
+      TurnBulbOnCommand(Bulb bulb) { this.bulb = bulb; }
+
+      @Override
+      public void execute() { bulb.turnOn();  }  // "do"
+
+      @Override
+      public void undo()    { bulb.turnOff(); }  // reverse of "do"
+  }
+
+  Notice: undo() for a TurnOn command is TurnOff — the reverse action is baked
+  in to the command itself, not the invoker.
+
+  All 4 concrete commands follow the same structure:
+
+  TurnBulbOnCommand   → execute: turnOn,  undo: turnOff
+  TurnBulbOffCommand  → execute: turnOff, undo: turnOn
+  TurnACOnCommand     → execute: turnOn,  undo: turnOff
+  TurnACOffCommand    → execute: turnOff, undo: turnOn
+
+  ---
+  Step 4 — The Invoker (MyRemoteControl.java)
+
+  public class MyRemoteControl {
+      HashMap<String, ICommand> commandMap;  // name → command object
+      Stack<String> commandStack;            // history for undo
+
+      public void setCommand(String name, ICommand command) {
+          commandMap.put(name, command);
+      }
+
+      public void pressButton(String command) {
+          commandMap.get(command).execute();
+          commandStack.push(command);        // record what was done
+      }
+
+      public void undo() {
+          if (commandStack.isEmpty())
+              System.out.println("No operation left to Undo");
+          else
+              commandMap.get(commandStack.pop()).undo(); // reverse last action
+      }
+  }
+
+  The remote control has zero knowledge of Bulb or AirConditioner. It only calls
+  execute() and undo() on ICommand. This means you can add a Fan, TV, or
+  Thermostat without touching MyRemoteControl at all — this is OCP in action.
+
+  The Stack<String> is the undo history. Each pressButton pushes the command
+  name; each undo pops and reverses it.
+
+  ---
+  Step 5 — Wiring it Together (Main.java)
+
+  AirConditioner ac = new AirConditioner();
+  Bulb bulb = new Bulb();
+
+  // Wrap receivers in command objects
+  ICommand turnACOn  = new TurnACOnCommand(ac);
+  ICommand turnACOff = new TurnACOffCommand(ac);
+  ICommand turnBulbOn  = new TurnBulbOnCommand(bulb);
+  ICommand turnBulbOff = new TurnBulbOffCommand(bulb);
+
+  MyRemoteControl remote = new MyRemoteControl();
+  remote.setCommand("turnACOnCommand",   turnACOn);
+  remote.setCommand("turnACOffCommand",  turnACOff);
+  remote.setCommand("turnBulbOnCommand", turnBulbOn);
+  remote.setCommand("turnBulbOffCommand",turnBulbOff);
+
+  remote.pressButton("turnACOnCommand");   // AC ON  → stack: [turnACOnCommand]
+  remote.undo();                            // AC OFF ← stack: []
+  remote.undo();                            // "No operation left to Undo"
+
+  ---
+  Trace of the Second Block
+
+  pressButton("turnBulbOnCommand")   → Bulb ON   | stack: [turnBulbOn]
+  pressButton("turnBulbOffCommand")  → Bulb OFF  | stack: [turnBulbOn,
+  turnBulbOff]
+  pressButton("turnACOnCommand")     → AC ON     | stack: [turnBulbOn,
+  turnBulbOff, turnACOn]
+  undo()  → reverses turnACOn    → AC OFF    | stack: [turnBulbOn, turnBulbOff]
+  undo()  → reverses turnBulbOff → Bulb ON   | stack: [turnBulbOn]
+  undo()  → reverses turnBulbOn  → Bulb OFF  | stack: []
+  undo()  → "No operation left to Undo"
+
+  Undo is LIFO — last executed, first reversed.
+
+  ---
+  Why Use Command Pattern?
+
+  ┌─────────────────────────────────────┬───────────────────────────────────┐
+  │         Problem without it          │         Solution with it          │
+  ├─────────────────────────────────────┼───────────────────────────────────┤
+  │ Invoker tightly coupled to          │ Invoker only knows ICommand       │
+  │ receivers                           │                                   │
+  ├─────────────────────────────────────┼───────────────────────────────────┤
+  │ Undo requires messy state tracking  │ Each command knows its own        │
+  │ in invoker                          │ reverse                           │
+  ├─────────────────────────────────────┼───────────────────────────────────┤
+  │ Adding new device means changing    │ Just add a new Command class      │
+  │ remote                              │                                   │
+  ├─────────────────────────────────────┼───────────────────────────────────┤
+  │ Can't queue or log operations       │ Commands are objects — store them │
+  │                                     │  anywhere                         │
+  └─────────────────────────────────────┴───────────────────────────────────┘
+
+  Real-world uses: text editor Ctrl+Z, transaction queues, job schedulers, GUI
+  buttons wired to actions, macro recording.
+
+✻ Cooked for 37s
