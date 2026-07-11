@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.thecodeexperience.ProxyDesignPattern</groupId>
-    <artifactId>Practice01</artifactId>
+    <artifactId>CachingProxy</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
