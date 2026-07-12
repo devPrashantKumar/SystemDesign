@@ -15,15 +15,15 @@ public class Directory {
         directoryContent.add(item);
     }
 
-    public void ls(){
-        System.out.println("Directory Name : "+directoryName);
+    public void ls(int indentation){
+        System.out.println(" ".repeat(indentation)+"Directory Name : "+directoryName);
 
         for(Object item : directoryContent){
             if(item instanceof Directory){
-                ((Directory) item).ls();
+                ((Directory) item).ls(indentation+1);
             }
             if(item instanceof File){
-                ((File) item).ls();
+                ((File) item).ls(indentation+1);
             }
         }
     }

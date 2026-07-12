@@ -1,6 +1,6 @@
-package com.thecodeexperience.WithoutCompositeDesignPattern;
+package com.thecodeexperience.WithCompositeDesignPattern;
 
-public class File {
+public class File implements FileSystem {
     String fileName;
 
     File(String fileName){
