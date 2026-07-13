@@ -1,7 +1,10 @@
 package com.thecodeexperience.WithStrategyPattern.Strategy;
 
 public class SportsDriveStrategy implements DriveStrategy {
-    public void drive(){
+
+    @Override
+    public void drive() {
         System.out.println("Sports Drive Capability");
     }
+
 }
